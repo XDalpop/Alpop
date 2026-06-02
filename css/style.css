@@ -115,7 +115,7 @@ body {
 
 .login-card .form-group {
   margin-bottom: 14px;
-  text-align: right;
+  text-align: left;
 }
 
 .login-card .form-group label {
@@ -133,7 +133,7 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text-primary);
-  font-family: var(--font-arabic);
+  font-family: var(--font-numbers);
   font-size: 14px;
   outline: none;
   transition: var(--transition);
@@ -171,6 +171,17 @@ body {
   color: var(--text-muted);
   font-size: 12px;
   margin-top: 14px;
+  text-align: center;
+}
+
+.login-hint a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-hint a:hover {
+  text-decoration: underline;
 }
 
 /* ============ APP VIEW ============ */

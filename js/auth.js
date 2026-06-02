@@ -42,23 +42,46 @@ const Auth = {
     } catch {}
   },
 
-  login(username, password) {
+  _isValidGmail(email) {
+    return /^[^\s@]+@gmail\.com$/i.test(email);
+  },
+
+  login(email, password) {
+    const e = email.trim().toLowerCase();
+    if (!e || !password) return { ok: false, error: 'Please enter email and password.' };
+    if (!this._isValidGmail(e)) return { ok: false, error: 'Please use a valid @gmail.com address.' };
+
     const users = this._getUsers();
-    const trimmedUser = username.trim().toLowerCase();
-    if (!trimmedUser || !password) return { ok: false, error: 'يرجى إدخال اسم المستخدم وكلمة المرور.' };
+    if (!users[e]) return { ok: false, error: 'No account found with this email. Please register first.' };
 
-    if (users[trimmedUser]) {
-      if (users[trimmedUser] !== password) {
-        return { ok: false, error: 'كلمة المرور غير صحيحة.' };
-      }
-    } else {
-      users[trimmedUser] = password;
-      this._saveUsers(users);
-    }
+    if (users[e].password !== password) return { ok: false, error: 'Incorrect password.' };
 
-    this._setSession({ username: trimmedUser });
-    Store.setUsername(trimmedUser);
-    return { ok: true };
+    this._setSession({ email: e, username: users[e].username });
+    Store.setUsername(users[e].username);
+    return { ok: true, username: users[e].username };
+  },
+
+  register(username, email, password, phone) {
+    const e = email.trim().toLowerCase();
+    const u = username.trim();
+
+    if (!u || !e || !password) return { ok: false, error: 'All fields are required.' };
+    if (u.length < 3) return { ok: false, error: 'Username must be at least 3 characters.' };
+    if (!this._isValidGmail(e)) return { ok: false, error: 'Please use a valid @gmail.com address.' };
+    if (password.length < 4) return { ok: false, error: 'Password must be at least 4 characters.' };
+
+    const users = this._getUsers();
+    if (users[e]) return { ok: false, error: 'An account with this email already exists. Please sign in.' };
+
+    const duplicate = Object.values(users).some(u2 => u2.username === u);
+    if (duplicate) return { ok: false, error: 'This username is already taken.' };
+
+    users[e] = { username: u, email: e, password, phone: phone || '', createdAt: new Date().toISOString() };
+    this._saveUsers(users);
+
+    this._setSession({ email: e, username: u });
+    Store.setUsername(u);
+    return { ok: true, username: u };
   },
 
   logout() {

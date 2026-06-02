@@ -7,10 +7,20 @@
 
   const loginScreen = $('#loginScreen');
   const appView = $('#appView');
+  const loginMode = $('#loginMode');
+  const registerMode = $('#registerMode');
   const loginForm = $('#loginForm');
-  const loginUsername = $('#loginUsername');
+  const registerForm = $('#registerForm');
+  const loginEmail = $('#loginEmail');
   const loginPassword = $('#loginPassword');
   const loginError = $('#loginError');
+  const registerError = $('#registerError');
+  const regUsername = $('#regUsername');
+  const regEmail = $('#regEmail');
+  const regPassword = $('#regPassword');
+  const regPhone = $('#regPhone');
+  const showRegisterLink = $('#showRegisterLink');
+  const showLoginLink = $('#showLoginLink');
   const userName = $('#userName');
   const logoutBtn = $('#logoutBtn');
   const modal = $('#tradeModal');
@@ -229,10 +239,27 @@
     appView.classList.remove('visible');
     appView.style.display = 'none';
     loginScreen.style.display = 'flex';
-    loginUsername.value = '';
+    loginMode.style.display = 'block';
+    registerMode.style.display = 'none';
+    loginEmail.value = '';
     loginPassword.value = '';
     loginError.classList.remove('visible');
-    loginUsername.focus();
+    registerError.classList.remove('visible');
+    loginEmail.focus();
+  }
+
+  function switchToRegister() {
+    loginMode.style.display = 'none';
+    registerMode.style.display = 'block';
+    registerError.classList.remove('visible');
+    regUsername.focus();
+  }
+
+  function switchToLogin() {
+    registerMode.style.display = 'none';
+    loginMode.style.display = 'block';
+    loginError.classList.remove('visible');
+    loginEmail.focus();
   }
 
   // ---- Events ----
@@ -240,15 +267,32 @@
     // Login
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const result = Auth.login(loginUsername.value, loginPassword.value);
+      const result = Auth.login(loginEmail.value, loginPassword.value);
       if (result.ok) {
-        showApp(Auth.getCurrentUser());
+        showApp(result.username);
         loadTrades();
       } else {
         loginError.textContent = result.error;
         loginError.classList.add('visible');
       }
     });
+
+    // Register
+    registerForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const result = Auth.register(regUsername.value, regEmail.value, regPassword.value, regPhone.value);
+      if (result.ok) {
+        showApp(result.username);
+        loadTrades();
+      } else {
+        registerError.textContent = result.error;
+        registerError.classList.add('visible');
+      }
+    });
+
+    // Toggle between login and register
+    showRegisterLink.addEventListener('click', (e) => { e.preventDefault(); switchToRegister(); });
+    showLoginLink.addEventListener('click', (e) => { e.preventDefault(); switchToLogin(); });
 
     // Logout
     logoutBtn.addEventListener('click', () => {
