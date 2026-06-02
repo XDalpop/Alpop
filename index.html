@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TradeVault — دفتر الصفقات</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <i class="fas fa-chart-line"></i>
+          <h1>TradeVault</h1>
+          <span class="logo-sub">دفتر الصفقات</span>
+        </div>
+        <p class="header-desc">منصة إدارة صفقات البورصة — مضاربة يومية وسوينغ</p>
+      </div>
+    </header>
+
+    <!-- Dashboard -->
+    <section class="dashboard" id="dashboard">
+      <div class="dashboard-grid" id="dashboardGrid">
+        <div class="stat-card" data-stat="total">
+          <div class="stat-icon"><i class="fas fa-exchange-alt"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">إجمالي الصفقات</span>
+            <span class="stat-value" id="statTotal">0</span>
+          </div>
+        </div>
+        <div class="stat-card" data-stat="pnl">
+          <div class="stat-icon"><i class="fas fa-coins"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">إجمالي الربح/الخسارة</span>
+            <span class="stat-value" id="statPnl">0 ج.م</span>
+          </div>
+        </div>
+        <div class="stat-card" data-stat="avg">
+          <div class="stat-icon"><i class="fas fa-percentage"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">متوسط نسبة الربح</span>
+            <span class="stat-value" id="statAvg">0%</span>
+          </div>
+        </div>
+        <div class="stat-card" data-stat="wl">
+          <div class="stat-icon"><i class="fas fa-trophy"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">رابح / خاسر</span>
+            <span class="stat-value" id="statWl">0 / 0</span>
+          </div>
+        </div>
+        <div class="stat-card" data-stat="best">
+          <div class="stat-icon"><i class="fas fa-arrow-up"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">أكبر ربح</span>
+            <span class="stat-value profit" id="statBest">0 ج.م</span>
+          </div>
+        </div>
+        <div class="stat-card" data-stat="worst">
+          <div class="stat-icon"><i class="fas fa-arrow-down"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">أكبر خسارة</span>
+            <span class="stat-value loss" id="statWorst">0 ج.م</span>
+          </div>
+        </div>
+        <div class="stat-card" data-stat="days">
+          <div class="stat-icon"><i class="fas fa-calendar-alt"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">متوسط الاحتفاظ</span>
+            <span class="stat-value" id="statDays">0 يوم</span>
+          </div>
+        </div>
+        <div class="stat-card" data-stat="pf">
+          <div class="stat-icon"><i class="fas fa-chart-pie"></i></div>
+          <div class="stat-info">
+            <span class="stat-label">Profit Factor</span>
+            <span class="stat-value" id="statPf">0.00</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Chart -->
+    <section class="chart-section">
+      <div class="section-header">
+        <h2><i class="fas fa-chart-bar"></i> أداء الأرباح</h2>
+      </div>
+      <div class="chart-wrapper glass">
+        <canvas id="profitChart"></canvas>
+      </div>
+    </section>
+
+    <!-- Controls -->
+    <section class="controls">
+      <div class="controls-row">
+        <div class="search-box">
+          <i class="fas fa-search"></i>
+          <input type="text" id="searchInput" placeholder="بحث في الصفقات...">
+        </div>
+        <div class="date-filters">
+          <div class="filter-group">
+            <label>من</label>
+            <input type="date" id="filterDateFrom">
+          </div>
+          <div class="filter-group">
+            <label>إلى</label>
+            <input type="date" id="filterDateTo">
+          </div>
+          <button class="btn btn-sm btn-outline" id="clearFiltersBtn"><i class="fas fa-times"></i> مسح</button>
+        </div>
+        <div class="controls-actions">
+          <button class="btn btn-sm btn-outline" id="exportCsvBtn"><i class="fas fa-file-csv"></i> CSV</button>
+          <button class="btn btn-sm btn-outline" id="exportXlsxBtn"><i class="fas fa-file-excel"></i> Excel</button>
+          <button class="btn btn-primary" id="addTradeBtn"><i class="fas fa-plus"></i> إضافة صفقة</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Table -->
+    <section class="table-section">
+      <div class="table-wrapper glass">
+        <table class="trades-table" id="tradesTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>تاريخ الدخول</th>
+              <th>تاريخ الخروج</th>
+              <th>عدد الأسهم</th>
+              <th>سعر الشراء</th>
+              <th>سعر البيع</th>
+              <th>الربح (ج.م)</th>
+              <th>نسبة الربح</th>
+              <th>المدة</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="tradesBody">
+            <tr class="empty-row">
+              <td colspan="10">
+                <i class="fas fa-inbox"></i>
+                <p>لا توجد صفقات بعد. أضف صفقتك الأولى!</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="tradeModal">
+    <div class="modal glass">
+      <div class="modal-header">
+        <h2 id="modalTitle">إضافة صفقة جديدة</h2>
+        <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+      </div>
+      <form id="tradeForm" autocomplete="off">
+        <input type="hidden" id="tradeId">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="entryDate">تاريخ الدخول <span class="required">*</span></label>
+            <input type="date" id="entryDate" required>
+          </div>
+          <div class="form-group">
+            <label for="exitDate">تاريخ الخروج <span class="required">*</span></label>
+            <input type="date" id="exitDate" required>
+          </div>
+          <div class="form-group">
+            <label for="shares">عدد الأسهم <span class="required">*</span></label>
+            <input type="number" id="shares" min="1" step="1" required placeholder="مثل: 100">
+          </div>
+          <div class="form-group">
+            <label for="entryPrice">سعر الشراء (ج.م) <span class="required">*</span></label>
+            <input type="number" id="entryPrice" min="0.01" step="0.01" required placeholder="مثل: 50.25">
+          </div>
+          <div class="form-group">
+            <label for="exitPrice">سعر البيع (ج.م) <span class="required">*</span></label>
+            <input type="number" id="exitPrice" min="0.01" step="0.01" required placeholder="مثل: 55.75">
+          </div>
+        </div>
+
+        <!-- Live Preview -->
+        <div class="calc-preview" id="calcPreview" style="display:none;">
+          <div class="preview-row">
+            <span>الربح المتوقع:</span>
+            <span class="preview-value" id="previewProfit">0 ج.م</span>
+          </div>
+          <div class="preview-row">
+            <span>نسبة الربح:</span>
+            <span class="preview-value" id="previewPercent">0%</span>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" id="modalCancel">إلغاء</button>
+          <button type="submit" class="btn btn-primary" id="modalSubmit">
+            <i class="fas fa-save"></i> <span>حفظ الصفقة</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sheetjs@2.0.0/dist/xlsx.full.min.js"></script>
+  <script src="js/calculator.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
