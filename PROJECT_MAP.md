@@ -82,7 +82,9 @@
 |--------|---------|----------|
 | `calcProfit(entryPrice, exitPrice, shares)` | أسعار + عدد | `{ profit, profitPercent }` |
 | `calcHoldingDays(entryDate, exitDate)` | تاريخين | عدد الأيام |
+| `classify(profit)` | رقم | `'win' \| 'loss' \| 'breakeven'` |
 | `isWinner(trade)` | صفقة | boolean (profit > 0) |
+| `isLoser(trade)` | صفقة | boolean (profit < 0) |
 
 ### Store API (store.js)
 
@@ -102,7 +104,7 @@
 | إجمالي الصفقات | `trades.length` |
 | إجمالي الربح/الخسارة | `Σ profit` |
 | متوسط نسبة الربح | `(Σ profitPercent) / trades.length` |
-| الصفقات الرابحة/الخاسرة | `trades.filter(isWinner).length` / باقي |
+| الصفقات رابح / خاسر / تعادل | `isWinner` / `isLoser` / باقي |
 | أكبر ربح | `Math.max(...trades.map(t => t.profit))` |
 | أكبر خسارة | `Math.min(...trades.map(t => t.profit))` |
 | متوسط مدة الاحتفاظ | `(Σ holdingDays) / trades.length` |

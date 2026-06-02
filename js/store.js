@@ -1,6 +1,14 @@
 const STORAGE_KEY = 'tradevault_trades';
 
 const Store = {
+  _parseNumeric(data) {
+    return {
+      shares: Number(data.shares),
+      entryPrice: Number(data.entryPrice),
+      exitPrice: Number(data.exitPrice)
+    };
+  },
+
   getAll() {
     try {
       const data = localStorage.getItem(STORAGE_KEY);
@@ -20,16 +28,16 @@ const Store = {
 
   add(tradeData) {
     const trades = this.getAll();
+    const numeric = this._parseNumeric(tradeData);
     const { profit, profitPercent } = Calculator.calcProfit(
-      tradeData.entryPrice, tradeData.exitPrice, tradeData.shares
+      numeric.entryPrice, numeric.exitPrice, numeric.shares
     );
     const holdingDays = Calculator.calcHoldingDays(tradeData.entryDate, tradeData.exitDate);
     const trade = {
       id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-      ...tradeData,
-      shares: Number(tradeData.shares),
-      entryPrice: Number(tradeData.entryPrice),
-      exitPrice: Number(tradeData.exitPrice),
+      entryDate: tradeData.entryDate,
+      exitDate: tradeData.exitDate,
+      ...numeric,
       profit,
       profitPercent,
       holdingDays,
@@ -45,16 +53,16 @@ const Store = {
     const trades = this.getAll();
     const idx = trades.findIndex(t => t.id === id);
     if (idx === -1) return null;
+    const numeric = this._parseNumeric(tradeData);
     const { profit, profitPercent } = Calculator.calcProfit(
-      tradeData.entryPrice, tradeData.exitPrice, tradeData.shares
+      numeric.entryPrice, numeric.exitPrice, numeric.shares
     );
     const holdingDays = Calculator.calcHoldingDays(tradeData.entryDate, tradeData.exitDate);
     trades[idx] = {
       ...trades[idx],
-      ...tradeData,
-      shares: Number(tradeData.shares),
-      entryPrice: Number(tradeData.entryPrice),
-      exitPrice: Number(tradeData.exitPrice),
+      entryDate: tradeData.entryDate,
+      exitDate: tradeData.exitDate,
+      ...numeric,
       profit,
       profitPercent,
       holdingDays,

@@ -6,10 +6,12 @@ const Dashboard = {
 
     document.getElementById('statTotal').textContent = stats.total;
     document.getElementById('statPnl').textContent = Utils.formatCurrency(stats.totalPnl);
-    document.getElementById('statPnl').className = `stat-value ${stats.totalPnl >= 0 ? 'profit' : 'loss'}`;
+    document.getElementById('statPnl').className = `stat-value ${Calculator.classify(stats.totalPnl) === 'loss' ? 'loss' : 'profit'}`;
     document.getElementById('statAvg').textContent = `${stats.avgPercent}%`;
-    document.getElementById('statAvg').className = `stat-value ${stats.avgPercent >= 0 ? 'profit' : 'loss'}`;
-    document.getElementById('statWl').textContent = `${stats.wins} / ${stats.losses}`;
+    document.getElementById('statAvg').className = `stat-value ${Calculator.classify(stats.avgPercent) === 'loss' ? 'loss' : 'profit'}`;
+    const wlParts = [`<span class="win-count">${stats.wins}</span>`, `<span class="loss-count">${stats.losses}</span>`];
+    if (stats.breakevens > 0) wlParts.push(`<span class="neutral-count">${stats.breakevens}</span>`);
+    document.getElementById('statWl').innerHTML = wlParts.join(' / ');
     document.getElementById('statBest').textContent = Utils.formatCurrency(stats.best);
     document.getElementById('statBest').className = 'stat-value profit';
     document.getElementById('statWorst').textContent = Utils.formatCurrency(stats.worst);
@@ -46,14 +48,14 @@ const Dashboard = {
 
     const labels = trades.map((_, i) => `#${i + 1}`);
     const data = trades.map(t => t.profit);
-    const colors = trades.map(t => t.profit >= 0
-      ? 'rgba(34, 197, 94, 0.7)'
-      : 'rgba(239, 68, 68, 0.7)'
-    );
-    const borderColors = trades.map(t => t.profit >= 0
-      ? 'rgba(34, 197, 94, 1)'
-      : 'rgba(239, 68, 68, 1)'
-    );
+    const colors = trades.map(t => {
+      const cls = Calculator.classify(t.profit);
+      return cls === 'win' ? 'rgba(34, 197, 94, 0.7)' : (cls === 'loss' ? 'rgba(239, 68, 68, 0.7)' : 'rgba(148, 163, 184, 0.5)');
+    });
+    const borderColors = trades.map(t => {
+      const cls = Calculator.classify(t.profit);
+      return cls === 'win' ? 'rgba(34, 197, 94, 1)' : (cls === 'loss' ? 'rgba(239, 68, 68, 1)' : 'rgba(148, 163, 184, 1)');
+    });
 
     this.chartInstance = new Chart(ctx, {
       type: 'bar',

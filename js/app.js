@@ -49,19 +49,27 @@
     }
 
     tbody.innerHTML = data.map((t, i) => {
-      const isProfit = t.profit >= 0;
-      return `<tr>
+      const cls = Calculator.classify(t.profit);
+      const isWin = cls === 'win';
+      const isLoss = cls === 'loss';
+      const statusIcon = isWin ? '<i class="fas fa-caret-up"></i>' : (isLoss ? '<i class="fas fa-caret-down"></i>' : '');
+      const statusLabel = isWin ? 'رابح' : (isLoss ? 'خاسر' : 'تعادل');
+      const rowClass = isWin ? 'row-win' : (isLoss ? 'row-loss' : '');
+      const valClass = isWin ? 'profit-text' : (isLoss ? 'loss-text' : 'neutral-text');
+      const badgeClass = isWin ? 'badge-win' : (isLoss ? 'badge-loss' : 'badge-neutral');
+      return `<tr class="${rowClass}">
         <td><span class="num">${i + 1}</span></td>
         <td>${Utils.formatDate(t.entryDate)}</td>
         <td>${Utils.formatDate(t.exitDate)}</td>
         <td><span class="num">${t.shares.toLocaleString()}</span></td>
         <td><span class="num">${t.entryPrice.toFixed(2)}</span></td>
         <td><span class="num">${t.exitPrice.toFixed(2)}</span></td>
-        <td><span class="num ${isProfit ? 'profit-text' : 'loss-text'}">${Utils.formatCurrency(t.profit)}</span></td>
-        <td><span class="num ${isProfit ? 'profit-text' : 'loss-text'}">${Utils.formatPercent(t.profitPercent)}</span></td>
+        <td><span class="num ${valClass}">${statusIcon} ${Utils.formatCurrency(t.profit)}</span></td>
+        <td><span class="num ${valClass}">${Utils.formatPercent(t.profitPercent)}</span></td>
         <td><span class="badge">${t.holdingDays} ي</span></td>
         <td>
           <div class="actions-cell">
+            <span class="status-badge ${badgeClass}">${statusLabel}</span>
             <button class="btn btn-icon btn-edit" data-id="${t.id}" title="تعديل">
               <i class="fas fa-pen"></i>
             </button>
@@ -140,10 +148,12 @@
 
     if (!isNaN(ePrice) && !isNaN(xPrice) && !isNaN(sh) && ePrice > 0 && sh > 0) {
       const { profit, profitPercent } = Calculator.calcProfit(ePrice, xPrice, sh);
+      const cls = Calculator.classify(profit);
+      const color = cls === 'win' ? 'var(--profit)' : (cls === 'loss' ? 'var(--loss)' : 'var(--text-muted)');
       previewProfit.textContent = Utils.formatCurrency(profit);
-      previewProfit.style.color = profit >= 0 ? 'var(--profit)' : 'var(--loss)';
+      previewProfit.style.color = color;
       previewPercent.textContent = Utils.formatPercent(profitPercent);
-      previewPercent.style.color = profit >= 0 ? 'var(--profit)' : 'var(--loss)';
+      previewPercent.style.color = color;
       calcPreview.style.display = 'block';
     } else {
       calcPreview.style.display = 'none';
