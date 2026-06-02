@@ -13,27 +13,58 @@
 <body>
   <!-- Login Screen -->
   <div class="login-screen" id="loginScreen">
-    <div class="login-card glass">
+    <div class="login-card glass" dir="ltr">
       <div class="login-logo">
         <i class="fas fa-chart-line"></i>
         <h1>TradeVault</h1>
-        <p>منصة إدارة صفقات البورصة</p>
+        <p>Stock Trading Journal</p>
       </div>
-      <form id="loginForm" autocomplete="off">
-        <div class="login-error" id="loginError"></div>
-        <div class="form-group">
-          <label for="loginUsername">اسم المستخدم</label>
-          <input type="text" id="loginUsername" placeholder="أدخل اسم المستخدم" required autofocus>
-        </div>
-        <div class="form-group">
-          <label for="loginPassword">كلمة المرور</label>
-          <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" required>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">
-          <i class="fas fa-sign-in-alt"></i> دخول
-        </button>
-        <p class="login-hint">حساب جديد؟ سيتم إنشاؤه تلقائياً</p>
-      </form>
+
+      <!-- Login Mode -->
+      <div id="loginMode">
+        <form id="loginForm" autocomplete="off">
+          <div class="login-error" id="loginError"></div>
+          <div class="form-group">
+            <label for="loginEmail">Email (Gmail)</label>
+            <input type="email" id="loginEmail" placeholder="your.email@gmail.com" required autofocus>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">
+            <i class="fas fa-sign-in-alt"></i> Sign In
+          </button>
+        </form>
+        <p class="login-hint">Don't have an account? <a href="#" id="showRegisterLink">Register</a></p>
+      </div>
+
+      <!-- Register Mode -->
+      <div id="registerMode" style="display:none;">
+        <form id="registerForm" autocomplete="off">
+          <div class="login-error" id="registerError"></div>
+          <div class="form-group">
+            <label for="regUsername">Username</label>
+            <input type="text" id="regUsername" placeholder="Choose a username" required>
+          </div>
+          <div class="form-group">
+            <label for="regEmail">Email (Gmail)</label>
+            <input type="email" id="regEmail" placeholder="your.email@gmail.com" required>
+          </div>
+          <div class="form-group">
+            <label for="regPassword">Password</label>
+            <input type="password" id="regPassword" placeholder="Create a password (min 4 chars)" required>
+          </div>
+          <div class="form-group">
+            <label for="regPhone">Phone Number</label>
+            <input type="tel" id="regPhone" placeholder="+20 100 000 0000">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">
+            <i class="fas fa-user-plus"></i> Create Account
+          </button>
+        </form>
+        <p class="login-hint">Already have an account? <a href="#" id="showLoginLink">Sign In</a></p>
+      </div>
     </div>
   </div>
 

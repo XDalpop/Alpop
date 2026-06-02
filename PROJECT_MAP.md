@@ -13,8 +13,8 @@
 | Logic | JavaScript (ES2024) | — | محلي |
 | Charts | Chart.js | **4.5.1** | CDN (jsDelivr) |
 | Icons | Font Awesome 6 (Free) | **6.7.2** | CDN (jsDelivr) |
-| Font (Latin) | Poppins | 300-700 | Google Fonts |
-| Font (Arabic) | Cairo | 400-700 | Google Fonts |
+| Font (Latin / Login) | Poppins | 300-700 | Google Fonts |
+| Font (Arabic / App) | Cairo | 400-700 | Google Fonts |
 | Persistence | LocalStorage API | — | Web API |
 | XLSX Export | SheetJS | **2.0.0** | CDN (jsDelivr) |
 | CSV Export | Native JS | — | محلي |
@@ -156,8 +156,10 @@ User ──> [شاشة الدخول] ──> إدخال اسم المستخدم 
 | Arabic / RTL | ✅ مخطط | dir="rtl" + Cairo font |
 | Responsive | ✅ مخطط | Media queries in style.css |
 | Glassmorphism Dark | ✅ مخطط | CSS variables + backdrop-filter |
-| نظام تسجيل دخول | ✅ مخطط | auth.js — جلسات لكل مستخدم |
-| مساحة تخزين منفصلة | ✅ مخطط | store.js — مفتاح ديناميكي tradevault_trades_{user} |
+| نظام تسجيل دخول (Gmail) | ✅ مخطط | auth.js — بريد إلكتروني + رقم هاتف |
+| إنشاء حساب جديد | ✅ مخطط | auth.js — اسم مستخدم + جيميل + باسورد + هاتف |
+| التحقق من صحة Gmail | ✅ مخطط | auth.js — regex @gmail.com |
+| مساحة تخزين منفصلة | ✅ مخطط | store.js — مفتاح tradevault_trades_{username} |
 | تسجيل خروج | ✅ مخطط | auth.js — مسح sessionStorage |
 | تحويل العملات | ❌ خارج النطاق | لم يُطلب صراحة في النطاق الأساسي |
 
