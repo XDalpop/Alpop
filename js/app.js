@@ -5,6 +5,14 @@
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => document.querySelectorAll(sel);
 
+  const loginScreen = $('#loginScreen');
+  const appView = $('#appView');
+  const loginForm = $('#loginForm');
+  const loginUsername = $('#loginUsername');
+  const loginPassword = $('#loginPassword');
+  const loginError = $('#loginError');
+  const userName = $('#userName');
+  const logoutBtn = $('#logoutBtn');
   const modal = $('#tradeModal');
   const modalTitle = $('#modalTitle');
   const tradeForm = $('#tradeForm');
@@ -209,8 +217,45 @@
     if (trade) openModal('تعديل الصفقة', trade);
   }
 
+  // ---- Auth UI ----
+  function showApp(username) {
+    loginScreen.style.display = 'none';
+    appView.classList.add('visible');
+    appView.style.display = 'block';
+    userName.textContent = username;
+  }
+
+  function showLogin() {
+    appView.classList.remove('visible');
+    appView.style.display = 'none';
+    loginScreen.style.display = 'flex';
+    loginUsername.value = '';
+    loginPassword.value = '';
+    loginError.classList.remove('visible');
+    loginUsername.focus();
+  }
+
   // ---- Events ----
   function bindEvents() {
+    // Login
+    loginForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const result = Auth.login(loginUsername.value, loginPassword.value);
+      if (result.ok) {
+        showApp(Auth.getCurrentUser());
+        loadTrades();
+      } else {
+        loginError.textContent = result.error;
+        loginError.classList.add('visible');
+      }
+    });
+
+    // Logout
+    logoutBtn.addEventListener('click', () => {
+      Auth.logout();
+      showLogin();
+    });
+
     // Add button
     addBtn.addEventListener('click', () => openModal('إضافة صفقة جديدة'));
 
@@ -262,7 +307,15 @@
   // ---- Init ----
   function init() {
     bindEvents();
-    loadTrades();
+
+    if (Auth.isLoggedIn()) {
+      const username = Auth.getCurrentUser();
+      Store.setUsername(username);
+      showApp(username);
+      loadTrades();
+    } else {
+      showLogin();
+    }
   }
 
   document.addEventListener('DOMContentLoaded', init);

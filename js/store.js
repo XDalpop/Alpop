@@ -1,6 +1,14 @@
-const STORAGE_KEY = 'tradevault_trades';
-
 const Store = {
+  _username: null,
+
+  setUsername(username) {
+    this._username = username;
+  },
+
+  _key() {
+    return this._username ? `tradevault_trades_${this._username}` : 'tradevault_trades';
+  },
+
   _parseNumeric(data) {
     return {
       shares: Number(data.shares),
@@ -11,7 +19,7 @@ const Store = {
 
   getAll() {
     try {
-      const data = localStorage.getItem(STORAGE_KEY);
+      const data = localStorage.getItem(this._key());
       return data ? JSON.parse(data) : [];
     } catch {
       return [];
@@ -20,7 +28,7 @@ const Store = {
 
   saveAll(trades) {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(trades));
+      localStorage.setItem(this._key(), JSON.stringify(trades));
     } catch (e) {
       console.error('Failed to save trades:', e);
     }
@@ -78,6 +86,6 @@ const Store = {
   },
 
   clear() {
-    localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(this._key());
   }
 };

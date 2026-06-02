@@ -66,18 +66,138 @@ body {
   padding: 20px;
 }
 
+/* ============ LOGIN SCREEN ============ */
+.login-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--bg-primary);
+}
+
+.login-card {
+  width: 100%;
+  max-width: 400px;
+  padding: 40px 32px;
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.login-logo {
+  margin-bottom: 28px;
+}
+
+.login-logo i {
+  font-size: 40px;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+
+.login-logo h1 {
+  font-family: var(--font-numbers);
+  font-size: 28px;
+  font-weight: 700;
+  background: var(--accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+}
+
+.login-logo p {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.login-card .form-group {
+  margin-bottom: 14px;
+  text-align: right;
+}
+
+.login-card .form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.login-card .form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: var(--font-arabic);
+  font-size: 14px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.login-card .form-group input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.login-error {
+  display: none;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: var(--loss);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  margin-bottom: 14px;
+  text-align: center;
+}
+
+.login-error.visible {
+  display: block;
+}
+
+.btn-block {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  margin-top: 4px;
+}
+
+.login-hint {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-top: 14px;
+}
+
+/* ============ APP VIEW ============ */
+.app-view {
+  display: none;
+}
+
+.app-view.visible {
+  display: block;
+}
+
 /* ============ HEADER ============ */
 .header {
-  text-align: center;
-  padding: 30px 0 10px;
+  padding: 20px 0 10px;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
 }
 
 .header-content .logo {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 10px;
-  margin-bottom: 6px;
 }
 
 .header-content .logo i {
@@ -109,6 +229,25 @@ body {
 .header-desc {
   font-size: 14px;
   color: var(--text-secondary);
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.user-display i {
+  color: var(--accent);
 }
 
 /* ============ DASHBOARD ============ */

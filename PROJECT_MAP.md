@@ -18,6 +18,7 @@
 | Persistence | LocalStorage API | — | Web API |
 | XLSX Export | SheetJS | **2.0.0** | CDN (jsDelivr) |
 | CSV Export | Native JS | — | محلي |
+| Auth & Session | localStorage + sessionStorage | — | Web API |
 
 **قرارات تقنية:**
 - **لا توجد أداة بناء** — Vanilla JS حفاظاً على البساطة (Simplicity First)
@@ -37,10 +38,11 @@
 ├── css/
 │   └── style.css        # جميع الأنماط (Dark, Glassmorphism, Responsive)
 ├── js/
-│   ├── store.js         # طبقة البيانات: LocalStorage CRUD
+│   ├── store.js         # طبقة البيانات: LocalStorage CRUD (ديناميكي لكل مستخدم)
 │   ├── calculator.js    # دوال الحساب المالي الخالصة (Pure Functions)
+│   ├── auth.js          # نظام المصادقة: تسجيل دخول، جلسات، مستخدمين
 │   ├── dashboard.js     # إحصائيات + Chart.js + Dashboard Cards
-│   ├── app.js           # التنسيق الرئيسي: Form, Table, Events, Export
+│   ├── app.js           # التنسيق الرئيسي: Form, Table, Events, Export, Auth
 │   └── utils.js         # Utilities: تنسيق تواريخ/أرقام، تصدير CSV
 └── PROJECT_MAP.md       # وثيقة المعمارية
 ```
@@ -115,17 +117,24 @@
 ## [SYSTEM_FLOW] — رحلة المستخدم GUI
 
 ```
-User ──> شاشة Dashboard (الإحصائيات + الشارت)
+User ──> [شاشة الدخول] ──> إدخال اسم المستخدم + كلمة المرور
   │
-  ├── [إضافة صفقة] ──> نموذج جانبي/Modal ──> تعبئة بيانات ──> حساب آلي ──> حفظ ──> تحديث الجدول + Dashboard
+  ├── [مستخدم جديد] ──> إنشاء حساب تلقائي ──> حفظ في LocalStorage (tradevault_users)
   │
-  ├── [تعديل صفقة] ──> فتح Modal مع البيانات ──> تعديل ──> إعادة حساب ──> حفظ ──> تحديث
-  │
-  ├── [حذف صفقة] ──> تأكيد ──> حذف ──> تحديث
-  │
-  ├── [بحث/فلترة] ──> كتابة كلمة ──> تصفية الجدول (JS Client-side)
-  │
-  └── [تصدير] ──> CSV (تحميل مباشر) / XLSX (عبر SheetJS)
+  └── [مستخدم موجود] ──> التحقق من كلمة المرور
+         │
+         ▼
+    [sessionStorage] ──> حفظ الجلسة (tradevault_session)
+         │
+         ▼
+    شاشة Dashboard الرئيسية (بيانات خاصّة بالمستخدم)
+      │  (مفتاح التخزين: tradevault_trades_{username})
+      │
+      ├── [إضافة صفقة] ──> Modal ──> حفظ ──> تحديث
+      ├── [تعديل/حذف] ──> تعديل البيانات ──> حفظ ──> تحديث
+      ├── [بحث/فلترة] ──> تصفية الجدول
+      ├── [تصدير] ──> CSV / XLSX
+      └── [تسجيل خروج] ──> مسح الجلسة ──> العودة لشاشة الدخول
 ```
 
 ---
@@ -147,6 +156,9 @@ User ──> شاشة Dashboard (الإحصائيات + الشارت)
 | Arabic / RTL | ✅ مخطط | dir="rtl" + Cairo font |
 | Responsive | ✅ مخطط | Media queries in style.css |
 | Glassmorphism Dark | ✅ مخطط | CSS variables + backdrop-filter |
+| نظام تسجيل دخول | ✅ مخطط | auth.js — جلسات لكل مستخدم |
+| مساحة تخزين منفصلة | ✅ مخطط | store.js — مفتاح ديناميكي tradevault_trades_{user} |
+| تسجيل خروج | ✅ مخطط | auth.js — مسح sessionStorage |
 | تحويل العملات | ❌ خارج النطاق | لم يُطلب صراحة في النطاق الأساسي |
 
 ---
